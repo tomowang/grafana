@@ -1,9 +1,9 @@
 import { Reducer } from 'redux';
-import { PayloadAction } from '@reduxjs/toolkit';
+import { PayloadAction, Action } from '@reduxjs/toolkit';
 
 export interface Given<State> {
   givenReducer: (
-    reducer: Reducer<State, PayloadAction<any>>,
+    reducer: Reducer<State, PayloadAction<any> | Action<any>>,
     state: State,
     showDebugOutput?: boolean,
     disableDeepFreeze?: boolean
@@ -11,7 +11,7 @@ export interface Given<State> {
 }
 
 export interface When<State> {
-  whenActionIsDispatched: (action: PayloadAction<any>) => Then<State>;
+  whenActionIsDispatched: (action: PayloadAction<any> | Action<any>) => Then<State>;
 }
 
 export interface Then<State> {
@@ -66,9 +66,9 @@ export const reducerTester = <State>(): Given<State> => {
     disableDeepFreeze = false
   ): When<State> => {
     reducerUnderTest = reducer;
-    initialState = { ...state };
+    initialState = state;
     if (!disableDeepFreeze) {
-      initialState = deepFreeze(initialState);
+      deepFreeze(initialState);
     }
     showDebugOutput = debug;
 
